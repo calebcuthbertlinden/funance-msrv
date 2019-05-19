@@ -1,0 +1,336 @@
+swagger: '2.0'
+info:
+  title: Funance Microservice
+  description: >-
+    This is the Funance microservice
+  version: 0.0.1
+  contact:
+    name: IMY 772
+    email: u13080432@tuks.co.za
+schemes:
+  - http
+  - https
+tags:
+  - name: profile
+    description: Functions relating to a specific users profile
+  - name: budget
+    description: Functions relating to a specific users budget
+  - name: savings
+    description: Functions relating to a specific users savings
+  - name: gameboard
+    description: Functions relating to a specific users game state
+basePath: /funance-msrv
+paths:
+  profile:
+    get:
+      tags:
+      - profile
+      summary: Retrieves profile of the requested user
+      responses:
+        '200':
+          description: Profile of the logged in user
+          schema:
+            $ref: "#/definitions/ProfileResponse"
+    post:
+      tags:
+      - profile
+      summary: Creates a new profile for a user
+
+  profile/dashboard:
+    get:
+      tags:
+      - profile
+      summary: Retrieves users full dashboard and summarised items
+      responses:
+        '200':
+          description: Retrieves users full dashboard and summarised items
+          schema:
+            $ref: "#/definitions/DashboardResponse"
+
+  profile/budget:
+    get:
+      tags:
+      - budget
+      summary: Retrieves users full budget
+      responses:
+        '200':
+          description: Budget of the logged in user
+          schema:
+            $ref: "#/definitions/BudgetResponse"
+
+# Budget endpoints
+  profile/budget/item:
+    get:
+      tags:
+      - budget
+      summary: Retrieves a specific budget item
+      responses:
+        '200':
+          description: Budget item chosen by the user
+          schema:
+            $ref: "#/definitions/BudgetItemResponse"
+    post:
+      tags:
+      - budget
+      summary: Creates a new budget item
+      parameters:
+      - in: body
+        name: body
+        required: true
+        description: Details for the item to create
+        schema:
+          $ref: '#/definitions/CreateBudgetItemRequest'
+      responses:
+        '200':
+          description: The budget item that was created
+          schema:
+            $ref: "#/definitions/BudgetItemResponse"
+
+  profile/budget/item/capture:
+    post:
+      tags:
+      - budget
+      summary: Captures a sub item on a budget item
+      parameters:
+      - in: body
+        name: body
+        required: true
+        description: Details for the sub item to create
+        schema:
+          $ref: '#/definitions/CaptureBudgetItemRequest'
+      responses:
+        '204':
+          description: The budget item that was created
+
+# Savings endpoints
+  profile/savings:
+    get:
+      tags:
+      - savings
+      summary: Retrieve the full savings information
+      responses:
+        '200':
+          description: The savings of the user
+          schema:
+            $ref: "#/definitions/SavingsResponse"
+
+  profile/savings/threshold:
+    post:
+      tags:
+      - savings
+      summary: Capture your savings threshold
+      parameters:
+      - in: body
+        name: body
+        required: true
+        description: Threshold amount
+        schema:
+          $ref: '#/definitions/SavingsThresholdRequest'
+      responses:
+        '204':
+          description: Confirmation is was saved correctly
+
+  profile/savings/goal:
+    post:
+      tags:
+      - savings
+      summary: Retrieve the full savings information
+      parameters:
+      - in: path
+        name: goalType
+        required: true
+        description: Goal type to be captured
+        schema:
+          $ref: '#/definitions/SavingsGoalRequest'
+      responses:
+        '204':
+          description: Confirmation that savings goal was saved
+
+# Gameboard endpoints
+  profile/gameboard:
+    get:
+      tags:
+      - gameboard
+      summary: Retrieve the full game state of the
+      responses:
+        '200':
+          description: The game state of the user
+          schema:
+            $ref: "#/definitions/GameboardResponse"
+
+  profile/gameboard/item:
+    post:
+      tags:
+      - gameboard
+      summary: Buy a gameboard item
+      parameters:
+      - in: body
+        name: body
+        required: true
+        description: Details for item bought
+        schema:
+          $ref: '#/definitions/BuyGameItemRequest'
+      responses:
+        '200':
+          description: The updated game state of the user
+          schema:
+            $ref: "#/definitions/GameboardResponse"
+
+definitions:
+  ProfileResponse:
+    type: object
+    properties:
+      name:
+        type: string
+      surname:
+        type: string
+      coins:
+        type: integer
+      session:
+        type: string
+
+  DashboardResponse:
+    type: object
+    properties:
+      gameboard:
+        $ref: "#/definitions/GameboardSummary"
+      budget:
+        $ref: "#/definitions/BudgetSummary"
+      finance:
+        $ref: "#/definitions/FinanceSummary"
+
+  GameboardSummary:
+    type: object
+    properties:
+      returnCode:
+        type: integer
+
+  BudgetSummary:
+    type: object
+    properties:
+      returnCode:
+        type: integer
+
+  FinanceSummary:
+    type: object
+    properties:
+      returnCode:
+        type: integer
+      savings:
+        type: number
+      budget:
+        type: integer
+      debt:
+        type: integer
+
+  BudgetResponse:
+    type: object
+    properties:
+      returnCode:
+        type: integer
+
+  CreateBudgetItemRequest:
+    type: object
+    properties:
+      title:
+        type: string
+      value:
+        type: string
+      category:
+        type: string
+
+  BudgetItemResponse:
+    type: object
+    properties:
+      title:
+        type: string
+      value:
+        type: number
+      category:
+        type: string
+
+  CaptureBudgetItemRequest:
+    type: object
+    properties:
+      title:
+        type: string
+      value:
+        type: number
+      date:
+        type: string
+
+  SavingsResponse:
+    type: object
+    properties:
+      value:
+        type: number
+      projections:
+        type: array
+        items:
+          $ref: '#/definitions/SavingsProjection'
+
+  SavingsProjection:
+    type: object
+    properties:
+      value:
+        type: number
+      projectionPeriod:
+        type: string
+        enum:
+          - SIX_MONTHS
+          - ONE_YEAR
+          - TWO_YEARS
+
+  SavingsThresholdRequest:
+    type: object
+    properties:
+      value:
+        type: number
+
+  SavingsGoalRequest:
+    type: object
+    properties:
+      value:
+        type: number
+      goalType:
+        type: string
+        enum:
+          - SHORT_TERM
+          - LONG_TERM
+
+  GameboardResponse:
+    type: object
+    properties:
+      coin:
+        type: integer
+      items:
+        type: array
+        items:
+          $ref: '#/definitions/GameboardItem'
+      environment:
+        type: string
+        enum:
+          - SMALL
+          - MEDIUM
+          - LARGE
+
+  GameboardItem:
+    type: object
+    properties:
+      name:
+        type: string
+      itemType:
+        $ref: '#/definitions/GameItemType'
+
+  BuyGameItemRequest:
+    type: object
+    properties:
+      itemType:
+        $ref: '#/definitions/GameItemType'
+
+  GameItemType:
+    type: string
+    enum:
+    - SMALL_PLANT
+    - MEDIUM_PLANT
+    - BIG_PLANT

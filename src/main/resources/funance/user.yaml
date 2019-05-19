@@ -1,0 +1,81 @@
+swagger: '2.0'
+info:
+  title: Funance Microservice
+  description: >-
+    This is the Funance microservice
+  version: 0.0.1
+  contact:
+    name: IMY 772
+    email: u13080432@tuks.co.za
+schemes:
+  - http
+  - https
+tags:
+  - name: user
+    description: Functions relating to user data
+basePath: /funance-msrv
+paths:
+  user:
+    get:
+      tags:
+      - user
+      summary: Retrieves user details
+      parameters:
+      - in: query
+        name: username
+        required: true
+        description: Username of user
+        type: string
+      responses:
+        '200':
+          description: Details of the logged in user
+          schema:
+            $ref: "#/definitions/UserResponse"
+    post:
+      tags:
+      - user
+      summary: Registers a profile for the user
+      parameters:
+      - in: body
+        name: body
+        required: true
+        description: Details for the registering user
+        schema:
+          $ref: '#/definitions/CreateUserRequest'
+      responses:
+        '200':
+          description: Details of the logged in user
+          schema:
+            $ref: "#/definitions/UserResponse"
+
+definitions:
+  UserResponse:
+    type: object
+    properties:
+      name:
+        type: string
+      surname:
+        type: string
+      username:
+        type: string
+      email:
+        type: string
+      password:
+        type: string
+      age:
+        type: integer
+
+  CreateUserRequest:
+    type: object
+    properties:
+      username:
+        type: string
+      password:
+        type: string
+      name:
+        type: string
+      surname:
+        type: string
+      age:
+        type: integer
+        format: int64
