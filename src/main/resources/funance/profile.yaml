@@ -47,28 +47,42 @@ paths:
           schema:
             $ref: "#/definitions/DashboardResponse"
 
+# Budget endpoints
   profile/budget:
     get:
       tags:
       - budget
       summary: Retrieves users full budget
+      parameters:
+      - in: query
+        name: userId
+        required: true
+        description: userId
+        type: integer
+        format: int64
       responses:
         '200':
           description: Budget of the logged in user
           schema:
             $ref: "#/definitions/BudgetResponse"
 
-# Budget endpoints
   profile/budget/item:
     get:
       tags:
       - budget
       summary: Retrieves a specific budget item
+      parameters:
+      - in: query
+        name: itemId
+        required: true
+        description: itemId
+        type: integer
+        format: int64
       responses:
         '200':
           description: Budget item chosen by the user
           schema:
-            $ref: "#/definitions/BudgetItemResponse"
+            $ref: "#/definitions/BudgetItem"
     post:
       tags:
       - budget
@@ -84,7 +98,7 @@ paths:
         '200':
           description: The budget item that was created
           schema:
-            $ref: "#/definitions/BudgetItemResponse"
+            $ref: "#/definitions/BudgetItem"
 
   profile/budget/item/capture:
     post:
@@ -226,27 +240,67 @@ definitions:
   BudgetResponse:
     type: object
     properties:
+      budget:
+        type: array
+        items:
+          $ref: '#/definitions/BudgetItem'
+      progress:
+        type: integer
+
+  BudgetItem:
+    type: object
+    properties:
       returnCode:
         type: integer
+      title:
+        type: string
+      onceoff:
+        type: boolean
+      category:
+        type: string
+        enum:
+          - DEBIT_ORDER
+          - FOOD
+          - MISC
+          - CUSTOM
+      categoryCustom:
+        type: string
+      state:
+        type: string
+        enum:
+          - OPEN
+          - PAYED
+          - UPCOMING
+          - ERROR
+      amount:
+        type: number
+        format: float
+      date:
+        type: string
 
   CreateBudgetItemRequest:
     type: object
     properties:
+      userId:
+        type: integer
+        format: int64
       title:
         type: string
-      value:
-        type: string
+      onceoff:
+        type: boolean
       category:
         type: string
-
-  BudgetItemResponse:
-    type: object
-    properties:
-      title:
+        enum:
+        - DEBIT_ORDER
+        - FOOD
+        - MISC
+        - CUSTOM
+      categoryCustom:
         type: string
-      value:
+      amount:
         type: number
-      category:
+        format: float
+      date:
         type: string
 
   CaptureBudgetItemRequest:
