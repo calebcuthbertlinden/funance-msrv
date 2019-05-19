@@ -16,3 +16,7 @@ spring:
     url: "jdbc:postgresql://localhost:5432/funanceuserdb"
     username: caleb5
     password: < your password >
+
+#  url: "jdbc:postgresql://funance-user-db.postgres.database.azure.com:5432/postgres?ssl=true&sslmode=prefer"
+#    username: cuthbertlindendb@funance-user-db
+#    password: LunaL..90
