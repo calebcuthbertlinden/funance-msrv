@@ -34,7 +34,7 @@ public class UserControllerTest {
 
     @Test
     public void getUser_Success() throws Exception {
-        ResponseEntity<UserResponse> response = template.userGet();
+        ResponseEntity<UserResponse> response = template.userGet("");
         assertNotNull(response.getBody());
     }
 }
