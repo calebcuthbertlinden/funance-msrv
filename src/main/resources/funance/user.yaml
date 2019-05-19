@@ -5,7 +5,7 @@ info:
     This is the Funance microservice
   version: 0.0.1
   contact:
-    name: IMY 772
+    name: IMY 772 - Caleb Linden
     email: u13080432@tuks.co.za
 schemes:
   - http
@@ -48,10 +48,34 @@ paths:
           schema:
             $ref: "#/definitions/UserResponse"
 
+  user/authenticate:
+    post:
+      tags:
+      - user
+      summary: Logs the user in
+      parameters:
+      - in: body
+        name: body
+        required: true
+        description: Users login credentials
+        schema:
+          $ref: '#/definitions/AuthenticationRequest'
+      responses:
+        '200':
+          description: If the user has been logged in or not
+          schema:
+            $ref: "#/definitions/AuthenticationResponse"
+
 definitions:
   UserResponse:
     type: object
     properties:
+      status:
+        type: string
+        enum:
+          - CREATED
+          - ALREADY_EXISTS
+          - ERROR
       name:
         type: string
       surname:
@@ -62,7 +86,7 @@ definitions:
         type: string
       password:
         type: string
-      age:
+      coinAmount:
         type: integer
 
   CreateUserRequest:
@@ -76,6 +100,26 @@ definitions:
         type: string
       surname:
         type: string
-      age:
-        type: integer
-        format: int64
+      email:
+        type: string
+
+  AuthenticationRequest:
+    type: object
+    properties:
+      username:
+        type: string
+      password:
+        type: string
+
+  AuthenticationResponse:
+    type: object
+    properties:
+      status:
+        type: string
+        enum:
+          - ERROR
+          - LOGGED_IN
+          - LOGGED_OUT
+          - ALREADY_LOGGED_IN
+          - INCORRECT
+          - NO_ACCOUNT

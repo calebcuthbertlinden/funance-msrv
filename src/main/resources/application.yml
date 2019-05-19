@@ -13,6 +13,6 @@ spring:
       ddl-auto: create
     database-platform: org.hibernate.dialect.PostgreSQLDialect
   datasource:
-    url: "jdbc:postgresql://funance-user-db.postgres.database.azure.com:5432/postgres?ssl=true&sslmode=prefer"
-    username: cuthbertlindendb@funance-user-db
-    password: LunaL..90
+    url: "jdbc:postgresql://localhost:5432/funanceuserdb"
+    username: caleb5
+    password: < your password >
