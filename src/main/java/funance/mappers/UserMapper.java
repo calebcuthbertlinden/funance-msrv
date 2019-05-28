@@ -10,6 +10,7 @@ public class UserMapper {
     public static UserResponse mapUser(User user) {
         UserResponse response = new UserResponse();
         response.setName(user.getFirstName());
+        response.setUserId(user.getId());
         response.setSurname(user.getLastName());
         response.setEmail(user.getEmailId());
         response.setPassword(user.getPassword());

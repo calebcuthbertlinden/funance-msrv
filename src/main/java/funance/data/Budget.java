@@ -7,24 +7,26 @@ import javax.persistence.*;
 public class Budget {
 
     private long id;
-    private long userId;
+    private String username;
     private String title;
     private String category;
     private String state;
+    private String description;
     private float amount;
     private String date;
     private boolean onceoff;
 
     public Budget() {}
 
-    public Budget(long userId, float amount, String category, String date, boolean onceoff, String state, String title) {
-        this.userId = userId;
+    public Budget(String username, float amount, String category, String date, boolean onceoff, String state, String title, String description) {
+        this.username = username;
         this.title = title;
         this.category = category;
         this.amount = amount;
         this.date = date;
         this.onceoff = onceoff;
         this.state = state;
+        this.description = description;
     }
 
     @Id
@@ -36,12 +38,12 @@ public class Budget {
         this.id = id;
     }
 
-    @Column(name = "user_id", nullable = false)
-    public long getUserId() {
-        return userId;
+    @Column(name = "username", nullable = false)
+    public String getUsername() {
+        return username;
     }
-    public void setUserId(long userId) {
-        this.userId = userId;
+    public void setUsername(String username) {
+        this.username = username;
     }
 
     @Column(name = "title", nullable = false)
@@ -66,6 +68,14 @@ public class Budget {
     }
     public void setState(String state) {
         this.state = state;
+    }
+
+    @Column(name = "description", nullable = false)
+    public String getDescription() {
+        return description;
+    }
+    public void setDescription(String description) {
+        this.description = description;
     }
 
     @Column(name = "onceoff", nullable = false)
@@ -95,7 +105,7 @@ public class Budget {
     @Override
     public String toString() {
         return "Budget [id=" + id +
-                ", userId=" + userId +
+                ", username=" + username +
                 ", category=" + category +
                 ", amount=" + amount +
                 ", date=" + date +
