@@ -2,10 +2,12 @@ package funance.controllers;
 
 import funance.data.User;
 import funance.data.UserRepository;
+import funance.mappers.ProfileMapper;
 import funance.mappers.UserMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 import za.co.discovery.portal.api.UserApi;
@@ -28,6 +30,7 @@ public class UserController implements UserApi {
     }
 
     @Override
+    @CrossOrigin(origins = "http://localhost:3000")
     public ResponseEntity<AuthenticationResponse> userAuthenticatePost(@Valid AuthenticationRequest body) {
         if (body == null || body.getUsername() == null || body.getPassword() == null) {
             return new ResponseEntity(HttpStatus.BAD_REQUEST);
@@ -49,6 +52,7 @@ public class UserController implements UserApi {
     }
 
     @Override
+    @CrossOrigin(origins = "http://localhost:3000")
     public ResponseEntity<UserResponse> userGet(@NotNull @RequestParam String username) {
         if (username.isEmpty()) {
             return new ResponseEntity(HttpStatus.BAD_REQUEST);
@@ -62,6 +66,7 @@ public class UserController implements UserApi {
     }
 
     @Override
+    @CrossOrigin(origins = "http://localhost:3000")
     public ResponseEntity<UserResponse> userPost(@Valid CreateUserRequest body) {
         if (body == null || body.getUsername().isEmpty()) {
             return new ResponseEntity(HttpStatus.BAD_REQUEST);
@@ -74,7 +79,8 @@ public class UserController implements UserApi {
                 response.setStatus(UserResponse.StatusEnum.ALREADY_EXISTS);
                 return new ResponseEntity(response, HttpStatus.OK);
             } else {
-                userRepository.createUser(5, body.getUsername(), body.getName(), body.getSurname(), body.getEmail(), body.getPassword());
+                long id = ProfileMapper.getRandomIntegerBetweenRange();
+                userRepository.createUser((int) id, body.getUsername(), body.getName(), body.getSurname(), body.getEmail(), body.getPassword());
                 UserResponse userResponse = userGet(body.getUsername()).getBody();
                 return userResponse != null ?
                         new ResponseEntity<>(userResponse.status(UserResponse.StatusEnum.CREATED).coinAmount(100), HttpStatus.OK)
