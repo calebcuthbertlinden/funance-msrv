@@ -5,6 +5,7 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.annotation.JsonCreator;
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
+import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.List;
 import za.co.discovery.portal.model.CategoryList;
@@ -14,7 +15,7 @@ import javax.validation.constraints.*;
 /**
  * BudgetResponse
  */
-@javax.annotation.Generated(value = "io.swagger.codegen.languages.SpringCodegen", date = "2019-05-28T12:07:44.845+02:00")
+@javax.annotation.Generated(value = "io.swagger.codegen.languages.SpringCodegen", date = "2019-05-28T19:32:38.748+02:00")
 
 public class BudgetResponse   {
   @JsonProperty("categories")
@@ -31,6 +32,12 @@ public class BudgetResponse   {
 
   @JsonProperty("daysLeftThisMonth")
   private String daysLeftThisMonth = null;
+
+  @JsonProperty("outstandingPaymentAmount")
+  private BigDecimal outstandingPaymentAmount = null;
+
+  @JsonProperty("income")
+  private BigDecimal income = null;
 
   public BudgetResponse categories(List<CategoryList> categories) {
     this.categories = categories;
@@ -141,6 +148,48 @@ public class BudgetResponse   {
     this.daysLeftThisMonth = daysLeftThisMonth;
   }
 
+  public BudgetResponse outstandingPaymentAmount(BigDecimal outstandingPaymentAmount) {
+    this.outstandingPaymentAmount = outstandingPaymentAmount;
+    return this;
+  }
+
+   /**
+   * Get outstandingPaymentAmount
+   * @return outstandingPaymentAmount
+  **/
+  @ApiModelProperty(value = "")
+
+  @Valid
+
+  public BigDecimal getOutstandingPaymentAmount() {
+    return outstandingPaymentAmount;
+  }
+
+  public void setOutstandingPaymentAmount(BigDecimal outstandingPaymentAmount) {
+    this.outstandingPaymentAmount = outstandingPaymentAmount;
+  }
+
+  public BudgetResponse income(BigDecimal income) {
+    this.income = income;
+    return this;
+  }
+
+   /**
+   * Get income
+   * @return income
+  **/
+  @ApiModelProperty(value = "")
+
+  @Valid
+
+  public BigDecimal getIncome() {
+    return income;
+  }
+
+  public void setIncome(BigDecimal income) {
+    this.income = income;
+  }
+
 
   @Override
   public boolean equals(java.lang.Object o) {
@@ -155,12 +204,14 @@ public class BudgetResponse   {
         Objects.equals(this.progress, budgetResponse.progress) &&
         Objects.equals(this.amountComplete, budgetResponse.amountComplete) &&
         Objects.equals(this.amountTotal, budgetResponse.amountTotal) &&
-        Objects.equals(this.daysLeftThisMonth, budgetResponse.daysLeftThisMonth);
+        Objects.equals(this.daysLeftThisMonth, budgetResponse.daysLeftThisMonth) &&
+        Objects.equals(this.outstandingPaymentAmount, budgetResponse.outstandingPaymentAmount) &&
+        Objects.equals(this.income, budgetResponse.income);
   }
 
   @Override
   public int hashCode() {
-    return Objects.hash(categories, progress, amountComplete, amountTotal, daysLeftThisMonth);
+    return Objects.hash(categories, progress, amountComplete, amountTotal, daysLeftThisMonth, outstandingPaymentAmount, income);
   }
 
   @Override
@@ -173,6 +224,8 @@ public class BudgetResponse   {
     sb.append("    amountComplete: ").append(toIndentedString(amountComplete)).append("\n");
     sb.append("    amountTotal: ").append(toIndentedString(amountTotal)).append("\n");
     sb.append("    daysLeftThisMonth: ").append(toIndentedString(daysLeftThisMonth)).append("\n");
+    sb.append("    outstandingPaymentAmount: ").append(toIndentedString(outstandingPaymentAmount)).append("\n");
+    sb.append("    income: ").append(toIndentedString(income)).append("\n");
     sb.append("}");
     return sb.toString();
   }

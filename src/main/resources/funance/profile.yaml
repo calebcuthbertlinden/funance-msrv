@@ -64,6 +64,20 @@ paths:
           description: Budget of the logged in user
           schema:
             $ref: "#/definitions/BudgetResponse"
+    post:
+      tags:
+      - budget
+      summary: Captures the basic budget information
+      parameters:
+      - in: body
+        name: body
+        required: true
+        description: Income and savings
+        schema:
+          $ref: '#/definitions/CaptureBudgetRequest'
+      responses:
+        '204':
+          description: The budget basics were captured
 
   profile/budget/item:
     get:
@@ -271,6 +285,10 @@ definitions:
         type: integer
       daysLeftThisMonth:
         type: string
+      outstandingPaymentAmount:
+        type: number
+      income:
+        type: number
 
   CategoryList:
     type: object
@@ -310,6 +328,18 @@ definitions:
         format: float
       date:
         type: string
+
+  CaptureBudgetRequest:
+    type: object
+    properties:
+      username:
+        type: string
+      income:
+        type: number
+      savings:
+        type: number
+      investments:
+        type: number
 
   CreateBudgetItemRequest:
     type: object

@@ -9,6 +9,7 @@ import za.co.discovery.portal.model.BudgetItem;
 import za.co.discovery.portal.model.BudgetResponse;
 import za.co.discovery.portal.model.BuyGameItemRequest;
 import za.co.discovery.portal.model.CaptureBudgetItemRequest;
+import za.co.discovery.portal.model.CaptureBudgetRequest;
 import za.co.discovery.portal.model.CreateBudgetItemRequest;
 import za.co.discovery.portal.model.DashboardResponse;
 import za.co.discovery.portal.model.GameboardResponse;
@@ -30,7 +31,7 @@ import org.springframework.web.multipart.MultipartFile;
 import java.util.List;
 import javax.validation.constraints.*;
 import javax.validation.Valid;
-@javax.annotation.Generated(value = "io.swagger.codegen.languages.SpringCodegen", date = "2019-05-28T12:07:44.845+02:00")
+@javax.annotation.Generated(value = "io.swagger.codegen.languages.SpringCodegen", date = "2019-05-28T19:32:38.748+02:00")
 
 @Api(value = "profile", description = "the profile API")
 public interface ProfileApi {
@@ -78,6 +79,15 @@ public interface ProfileApi {
     @RequestMapping(value = "profile/budget/item",
         method = RequestMethod.POST)
     ResponseEntity<BudgetItem> profileBudgetItemPost(@ApiParam(value = "Details for the item to create" ,required=true )  @Valid @RequestBody CreateBudgetItemRequest body);
+
+
+    @ApiOperation(value = "Captures the basic budget information", notes = "", response = Void.class, tags={ "budget", })
+    @ApiResponses(value = { 
+        @ApiResponse(code = 204, message = "The budget basics were captured", response = Void.class) })
+    
+    @RequestMapping(value = "profile/budget",
+        method = RequestMethod.POST)
+    ResponseEntity<Void> profileBudgetPost(@ApiParam(value = "Income and savings" ,required=true )  @Valid @RequestBody CaptureBudgetRequest body);
 
 
     @ApiOperation(value = "Retrieves users full dashboard and summarised items", notes = "", response = DashboardResponse.class, tags={ "profile", })

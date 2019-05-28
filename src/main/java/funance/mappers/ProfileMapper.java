@@ -1,10 +1,12 @@
 package funance.mappers;
 
 import funance.data.Budget;
+import funance.data.FinancialProfile;
 import org.springframework.stereotype.Component;
 import za.co.discovery.portal.model.*;
 
 import java.lang.reflect.Array;
+import java.math.BigDecimal;
 import java.time.LocalDate;
 import java.time.ZoneId;
 import java.util.ArrayList;
@@ -15,7 +17,7 @@ import java.util.Random;
 @Component
 public class ProfileMapper {
 
-    public static BudgetResponse mapBudgetResponse(List<Budget> budgetList) {
+    public static BudgetResponse mapBudgetResponse(List<Budget> budgetList, FinancialProfile profile) {
 
         List<CategoryList> list = new ArrayList();
 
@@ -29,9 +31,8 @@ public class ProfileMapper {
         custom.setCategory(Category.CUSTOM);
 
         int completeAmount = 0;
-
         for (Budget budget : budgetList) {
-            completeAmount = budget.getState().equals("PAYED") ? completeAmount++ : completeAmount;
+            completeAmount = budget.getState().equals("PAYED") ? completeAmount+1 : completeAmount;
             switch (budget.getCategory()) {
                 case "DEBIT_ORDER":
                     debitOrder.addBudgetItem(mapBudgetItem(budget));
@@ -53,12 +54,44 @@ public class ProfileMapper {
         list.add(misc);
         list.add(custom);
 
+        float incomeLeft = profile.getIncome() - getAmountPayed(list);
+
         return new BudgetResponse()
                 .categories(list)
                 .amountComplete(completeAmount)
                 .amountTotal(getBudgetAmount(list))
                 .daysLeftThisMonth(getDaysRemainingThisMonth())
+                .outstandingPaymentAmount(getOutstandingAmount(list))
+                .income(new BigDecimal(incomeLeft))
                 .progress(80);
+    }
+
+    private static BigDecimal getOutstandingAmount(List<CategoryList> budgets) {
+        float value = 0;
+        for (CategoryList c : budgets) {
+            if (c.getBudget() != null) {
+                for(BudgetItem budget: c.getBudget()) {
+                    value += !budget.getState().toString().equals("PAYED") ?
+                            budget.getAmount() : 0;
+                }
+            }
+
+        }
+        return BigDecimal.valueOf(value);
+    }
+
+    private static float getAmountPayed(List<CategoryList> budgets) {
+        float value = 0;
+        for (CategoryList c : budgets) {
+            if (c.getBudget() != null) {
+                for(BudgetItem budget: c.getBudget()) {
+                    value += budget.getState().toString().equals("PAYED") ?
+                            budget.getAmount() : 0;
+                }
+            }
+
+        }
+        return value;
     }
 
     private static String getDaysRemainingThisMonth() {

@@ -3,6 +3,7 @@ za\co\discovery\portal\model\BudgetItem.class
 za\co\discovery\portal\model\GameboardItem.class
 za\co\discovery\portal\model\CreateBudgetItemRequest$CategoryEnum.class
 za\co\discovery\portal\model\SavingsGoalRequest$GoalTypeEnum.class
+za\co\discovery\portal\model\CaptureBudgetRequest.class
 za\co\discovery\portal\model\GameboardResponse.class
 za\co\discovery\portal\model\DashboardResponse.class
 za\co\discovery\portal\model\BuyGameItemRequest.class
@@ -10,6 +11,7 @@ za\co\discovery\portal\model\FinanceSummary.class
 za\co\discovery\portal\api\ProfileApi.class
 za\co\discovery\portal\model\SavingsThresholdRequest.class
 za\co\discovery\portal\model\CreateBudgetItemRequest.class
+funance\data\FinancialProfile.class
 funance\Application.class
 funance\configuration\SwaggerConfiguration.class
 funance\data\User.class

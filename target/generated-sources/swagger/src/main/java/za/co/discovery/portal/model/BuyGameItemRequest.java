@@ -12,7 +12,7 @@ import javax.validation.constraints.*;
 /**
  * BuyGameItemRequest
  */
-@javax.annotation.Generated(value = "io.swagger.codegen.languages.SpringCodegen", date = "2019-05-28T12:07:44.845+02:00")
+@javax.annotation.Generated(value = "io.swagger.codegen.languages.SpringCodegen", date = "2019-05-28T19:32:38.748+02:00")
 
 public class BuyGameItemRequest   {
   @JsonProperty("itemType")

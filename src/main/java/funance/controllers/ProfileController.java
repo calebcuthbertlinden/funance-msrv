@@ -1,6 +1,7 @@
 package funance.controllers;
 
 import funance.data.Budget;
+import funance.data.FinancialProfile;
 import funance.data.PortfolioRepository;
 import funance.data.UserRepository;
 import funance.mappers.ProfileMapper;
@@ -51,8 +52,9 @@ public class ProfileController implements ProfileApi {
             return new ResponseEntity(HttpStatus.BAD_REQUEST);
         }
         try {
-            List<Budget> budget = portfolioRepository.findByUserId(userRepository.findByUsername(username).getUsername());
-            return new ResponseEntity(ProfileMapper.mapBudgetResponse(budget), HttpStatus.OK);
+            List<Budget> budget = portfolioRepository.findByUserId(username);
+            FinancialProfile profile = portfolioRepository.findFinancialProfileByUser(username);
+            return new ResponseEntity(ProfileMapper.mapBudgetResponse(budget, profile), HttpStatus.OK);
         } catch (Exception exception) {
             return new ResponseEntity(exception, HttpStatus.INTERNAL_SERVER_ERROR);
         }
@@ -77,6 +79,18 @@ public class ProfileController implements ProfileApi {
             portfolioRepository.createBudgetItem(id, body.getUsername(), body.getTitle(), body.getAmount(),
                     body.getCategory().toString(), body.getDate(), body.getOnceoff(), "OPEN", body.getDescription());
             return new ResponseEntity(profileBudgetItemGet(id).getBody(), HttpStatus.OK);
+        } catch (Exception exception) {
+            return new ResponseEntity(exception, HttpStatus.OK);
+        }
+    }
+
+    @Override
+    @CrossOrigin(origins = "http://localhost:3000")
+    public ResponseEntity<Void> profileBudgetPost(@Valid CaptureBudgetRequest body) {
+        try {
+            portfolioRepository.createFinancialProfile(body.getUsername(), body.getIncome().floatValue(), body.getSavings().floatValue(),
+                    body.getInvestments().floatValue());
+            return new ResponseEntity(HttpStatus.OK);
         } catch (Exception exception) {
             return new ResponseEntity(exception, HttpStatus.OK);
         }
