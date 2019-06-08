@@ -31,7 +31,7 @@ import org.springframework.web.multipart.MultipartFile;
 import java.util.List;
 import javax.validation.constraints.*;
 import javax.validation.Valid;
-@javax.annotation.Generated(value = "io.swagger.codegen.languages.SpringCodegen", date = "2019-05-28T19:32:38.748+02:00")
+@javax.annotation.Generated(value = "io.swagger.codegen.languages.SpringCodegen", date = "2019-06-08T21:15:48.012+02:00")
 
 @Api(value = "profile", description = "the profile API")
 public interface ProfileApi {
@@ -105,7 +105,7 @@ public interface ProfileApi {
     
     @RequestMapping(value = "profile/gameboard",
         method = RequestMethod.GET)
-    ResponseEntity<GameboardResponse> profileGameboardGet();
+    ResponseEntity<GameboardResponse> profileGameboardGet( @NotNull@ApiParam(value = "name of the user", required = true) @RequestParam(value = "username", required = true) String username);
 
 
     @ApiOperation(value = "Buy a gameboard item", notes = "", response = GameboardResponse.class, tags={ "gameboard", })
