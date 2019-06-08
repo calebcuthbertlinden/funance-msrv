@@ -199,6 +199,12 @@ paths:
       tags:
       - gameboard
       summary: Retrieve the full game state of the
+      parameters:
+      - in: query
+        name: username
+        required: true
+        description: name of the user
+        type: String
       responses:
         '200':
           description: The game state of the user
@@ -421,6 +427,7 @@ definitions:
     properties:
       coin:
         type: integer
+        format: int64
       items:
         type: array
         items:
@@ -445,6 +452,40 @@ definitions:
     properties:
       itemType:
         $ref: '#/definitions/GameItemType'
+
+  TwilioItem:
+    type: object
+    properties:
+      twilio:
+        $ref: '#/definitions/collected_items'
+
+  twilio:
+    type: object
+    properties:
+      twilio:
+        $ref: '#/definitions/collected_items'
+
+  collected_items:
+    type: object
+    properties:
+      collected_data:
+        $ref: '#/definitions/collect_comments'
+
+  collect_comments:
+    type: object
+    properties:
+      collected_data:
+        $ref: '#/definitions/answers'
+
+  answers:
+    type: object
+    properties:
+      title:
+        type: String
+      category:
+        type: String
+      value:
+        type: String
 
   GameItemType:
     type: string

@@ -2,6 +2,7 @@ package funance.mappers;
 
 import funance.data.Budget;
 import funance.data.FinancialProfile;
+import funance.data.Gameboard;
 import org.springframework.stereotype.Component;
 import za.co.discovery.portal.model.*;
 
@@ -197,6 +198,11 @@ public class ProfileMapper {
 
     public static GameboardSummary mapGameboardSummary() {
         return new GameboardSummary();
+    }
+
+    public static GameboardResponse mapGameboard(Gameboard gameboard) {
+        return new GameboardResponse()
+                .coin(gameboard.getCoins());
     }
 
     public static long getRandomIntegerBetweenRange(){

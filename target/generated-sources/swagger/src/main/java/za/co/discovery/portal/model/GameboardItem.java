@@ -12,7 +12,7 @@ import javax.validation.constraints.*;
 /**
  * GameboardItem
  */
-@javax.annotation.Generated(value = "io.swagger.codegen.languages.SpringCodegen", date = "2019-05-28T19:32:38.748+02:00")
+@javax.annotation.Generated(value = "io.swagger.codegen.languages.SpringCodegen", date = "2019-06-08T21:15:48.012+02:00")
 
 public class GameboardItem   {
   @JsonProperty("name")
