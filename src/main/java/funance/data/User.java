@@ -12,15 +12,17 @@ public class User {
     private String username;
     private String password;
     private String emailId;
+    private String contact;
 
     public User() {}
 
-    public User(String firstName, String lastName, String username, String password, String emailId) {
+    public User(String firstName, String lastName, String username, String password, String emailId, String contact) {
         this.firstName = firstName;
         this.lastName = lastName;
         this.username = username;
         this.password = password;
         this.emailId = emailId;
+        this.contact = contact;
     }
 
     @Id
@@ -70,6 +72,14 @@ public class User {
     }
     public void setEmailId(String emailId) {
         this.emailId = emailId;
+    }
+
+    @Column(name = "contact", nullable = false)
+    public String getContact() {
+        return contact;
+    }
+    public void setContact(String contact) {
+        this.contact = contact;
     }
 
     @Override

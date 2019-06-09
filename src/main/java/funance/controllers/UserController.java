@@ -30,7 +30,7 @@ public class UserController implements UserApi {
     }
 
     @Override
-    @CrossOrigin(origins = "http://localhost:3000")
+    @CrossOrigin
     public ResponseEntity<AuthenticationResponse> userAuthenticatePost(@Valid AuthenticationRequest body) {
         if (body == null || body.getUsername() == null || body.getPassword() == null) {
             return new ResponseEntity(HttpStatus.BAD_REQUEST);
@@ -52,7 +52,7 @@ public class UserController implements UserApi {
     }
 
     @Override
-    @CrossOrigin(origins = "http://localhost:3000")
+    @CrossOrigin
     public ResponseEntity<UserResponse> userGet(@NotNull @RequestParam String username) {
         if (username.isEmpty()) {
             return new ResponseEntity(HttpStatus.BAD_REQUEST);
@@ -80,7 +80,7 @@ public class UserController implements UserApi {
                 return new ResponseEntity(response, HttpStatus.OK);
             } else {
                 long id = ProfileMapper.getRandomIntegerBetweenRange();
-                userRepository.createUser((int) id, body.getUsername(), body.getName(), body.getSurname(), body.getEmail(), body.getPassword());
+                userRepository.createUser((int) id, body.getUsername(), body.getName(), body.getSurname(), body.getEmail(), body.getPassword(), "+27647520016");
                 UserResponse userResponse = userGet(body.getUsername()).getBody();
                 return userResponse != null ?
                         new ResponseEntity<>(userResponse.status(UserResponse.StatusEnum.CREATED).coinAmount(100), HttpStatus.OK)
