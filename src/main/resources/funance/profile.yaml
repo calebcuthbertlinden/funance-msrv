@@ -67,7 +67,7 @@ paths:
     post:
       tags:
       - budget
-      summary: Captures the basic budget information
+      summary: Captures the basic budget information. Income, savings, etc
       parameters:
       - in: body
         name: body
