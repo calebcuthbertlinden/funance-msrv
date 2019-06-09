@@ -133,12 +133,14 @@ public class ProfileController implements ProfileApi {
     @CrossOrigin
     public ResponseEntity<SavingsResponse> profileSavingsGet() {
         SavingsResponse savingsResponse = new SavingsResponse();
+        // TODO implement or remove
         return new ResponseEntity(savingsResponse, HttpStatus.OK);
     }
 
     @Override
     @CrossOrigin
     public ResponseEntity<Void> profileSavingsGoalPost(String goalType) {
+        // TODO implement or remove
         return new ResponseEntity(HttpStatus.OK);
     }
 

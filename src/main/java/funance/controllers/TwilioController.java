@@ -58,10 +58,12 @@ public class TwilioController {
         String title = item.getTwilio().getCollected_data().getCollect_comments().getAnswers().getTitle().getAnswer();
         String category = item.getTwilio().getCollected_data().getCollect_comments().getAnswers().getCategory().getAnswer();
         String amount = item.getTwilio().getCollected_data().getCollect_comments().getAnswers().getValue().getAnswer();
+        boolean payed = isPayed(item.getTwilio().getCollected_data().getCollect_comments().getAnswers().getPaid().getAnswer().toUpperCase());
 
         try {
             portfolioRepository.createBudgetItem(id, username, title, Float.valueOf(amount), category,
-                    getTodaysDate(), true, BudgetItem.StateEnum.OPEN.toString(), TWILIO_BUDGET_ITEM_DESCRIPTION);
+                    getTodaysDate(), payed, payed? BudgetItem.StateEnum.PAYED.toString() : BudgetItem.StateEnum.OPEN.toString(),
+                    TWILIO_BUDGET_ITEM_DESCRIPTION);
             sendTwilioMessage(userNumber,
                     "You have successfully added a new item to your budget: \n" + title  + " for R" + amount);
             return profileController.profileBudgetItemGet(id);
@@ -103,6 +105,10 @@ public class TwilioController {
 
     private String getUsernameFromNumber(String number) {
         return userRepository.findByContact(number).getUsername();
+    }
+
+    private boolean isPayed(String paid) {
+        return paid.charAt(0) == 'Y' || paid.equals("YES") || paid.equals("YIP") || paid.equals("YESS") || paid.equals("INDEED") || paid.equals("YA");
     }
 
     private String getTodaysDate() {

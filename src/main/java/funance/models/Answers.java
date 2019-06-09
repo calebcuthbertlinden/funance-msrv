@@ -27,10 +27,20 @@ public class Answers {
         this.title = title;
     }
 
+    public Answer getPaid() {
+        return paid;
+    }
+
+    public void setPaid(Answer paid) {
+        this.paid = paid;
+    }
+
     @JsonProperty("category")
     Answer category;
     @JsonProperty("value")
     Answer value;
     @JsonProperty("title")
     Answer title;
+    @JsonProperty("paid")
+    Answer paid;
 }
