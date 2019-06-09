@@ -35,6 +35,7 @@ public class ProfileController implements ProfileApi {
     @CrossOrigin
     public ResponseEntity<ProfileResponse> profileGet() {
         ProfileResponse response = new ProfileResponse();
+        // TODO implement or remove
         return new ResponseEntity(response, HttpStatus.OK);
     }
 
@@ -42,6 +43,7 @@ public class ProfileController implements ProfileApi {
     @CrossOrigin
     public ResponseEntity<Void> profilePost() {
         ProfileResponse response = new ProfileResponse();
+        // TODO implement or remove
         return new ResponseEntity(response, HttpStatus.OK);
     }
 
@@ -112,6 +114,7 @@ public class ProfileController implements ProfileApi {
     @Override
     @CrossOrigin
     public ResponseEntity<Void> profileBudgetItemCapturePost(@Valid CaptureBudgetItemRequest body) {
+        // TODO implement or remove
         return new ResponseEntity(HttpStatus.OK);
     }
 
@@ -137,6 +140,7 @@ public class ProfileController implements ProfileApi {
 
     @Override
     public ResponseEntity<Void> profileSavingsThresholdPost(@Valid SavingsThresholdRequest body) {
+        // TODO implement or remove
         return new ResponseEntity(HttpStatus.OK);
     }
 
