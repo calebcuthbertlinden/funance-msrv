@@ -1,5 +1,6 @@
-package funance.data;
+package funance.data.repositories;
 
+import funance.data.tables.User;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;

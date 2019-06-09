@@ -1,12 +1,11 @@
 package funance.mappers;
 
-import funance.data.Budget;
-import funance.data.FinancialProfile;
-import funance.data.Gameboard;
+import funance.data.tables.Budget;
+import funance.data.tables.FinancialProfile;
+import funance.data.tables.Gameboard;
 import org.springframework.stereotype.Component;
 import za.co.discovery.portal.model.*;
 
-import java.lang.reflect.Array;
 import java.math.BigDecimal;
 import java.time.LocalDate;
 import java.time.ZoneId;

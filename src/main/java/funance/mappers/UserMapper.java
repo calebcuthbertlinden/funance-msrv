@@ -1,6 +1,6 @@
 package funance.mappers;
 
-import funance.data.User;
+import funance.data.tables.User;
 import org.springframework.stereotype.Component;
 import za.co.discovery.portal.model.UserResponse;
 

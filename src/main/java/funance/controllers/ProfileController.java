@@ -1,12 +1,11 @@
 package funance.controllers;
 
-import funance.data.Budget;
-import funance.data.FinancialProfile;
-import funance.data.Gameboard;
-import funance.data.PortfolioRepository;
+import funance.data.repositories.GameboardRepository;
+import funance.data.tables.Budget;
+import funance.data.tables.FinancialProfile;
+import funance.data.tables.Gameboard;
+import funance.data.repositories.PortfolioRepository;
 import funance.mappers.ProfileMapper;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -24,11 +23,16 @@ import java.util.List;
 @RestController
 public class ProfileController implements ProfileApi {
 
+    private static final int GAMEBOARD_COINS_INITIAL = 1000;
+
     private PortfolioRepository portfolioRepository;
+    private GameboardRepository gameboardRepository;
 
     @Autowired
-    ProfileController(PortfolioRepository portfolioRepository) {
+    ProfileController(PortfolioRepository portfolioRepository,
+                      GameboardRepository gameboardRepository) {
         this.portfolioRepository = portfolioRepository;
+        this.gameboardRepository = gameboardRepository;
     }
 
     @Override
@@ -94,7 +98,7 @@ public class ProfileController implements ProfileApi {
         try {
             portfolioRepository.createFinancialProfile(body.getUsername(), body.getIncome().floatValue(), body.getSavings().floatValue(),
                     body.getInvestments().floatValue());
-            portfolioRepository.createGameboard(body.getUsername(), 100);
+            gameboardRepository.createGameboard(body.getUsername(), GAMEBOARD_COINS_INITIAL);
             return new ResponseEntity(HttpStatus.OK);
         } catch (Exception exception) {
             return new ResponseEntity(exception, HttpStatus.OK);
@@ -121,7 +125,7 @@ public class ProfileController implements ProfileApi {
     @Override
     @CrossOrigin
     public ResponseEntity<Void> profileBudgetItemCapturePut(@NotNull Long itemId, @NotNull String state) {
-        portfolioRepository.updateBudgetItem(itemId, "PAYED");
+        portfolioRepository.updateBudgetItem(itemId, BudgetItem.StateEnum.PAYED.toString());
         return new ResponseEntity(HttpStatus.OK);
     }
 
@@ -147,7 +151,7 @@ public class ProfileController implements ProfileApi {
     @Override
     @CrossOrigin
     public ResponseEntity<GameboardResponse> profileGameboardGet(@NotNull String username) {
-        Gameboard gameboard = portfolioRepository.findGameboardFromUser(username);
+        Gameboard gameboard = gameboardRepository.findGameboardFromUser(username);
         return new ResponseEntity(ProfileMapper.mapGameboard(gameboard), HttpStatus.OK);
     }
 

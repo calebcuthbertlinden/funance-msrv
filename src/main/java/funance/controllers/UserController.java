@@ -1,7 +1,7 @@
 package funance.controllers;
 
-import funance.data.User;
-import funance.data.UserRepository;
+import funance.data.tables.User;
+import funance.data.repositories.UserRepository;
 import funance.mappers.ProfileMapper;
 import funance.mappers.UserMapper;
 import org.springframework.beans.factory.annotation.Autowired;
