@@ -36,7 +36,7 @@ public class ProfileController implements ProfileApi {
     }
 
     @Override
-    @CrossOrigin
+    @CrossOrigin(origins = {"http://localhost:3000", "https://funance-msrv.azurewebsites.net"})
     public ResponseEntity<ProfileResponse> profileGet() {
         ProfileResponse response = new ProfileResponse();
         // TODO implement or remove
@@ -44,7 +44,7 @@ public class ProfileController implements ProfileApi {
     }
 
     @Override
-    @CrossOrigin
+    @CrossOrigin(origins = {"http://localhost:3000", "https://funance-msrv.azurewebsites.net"})
     public ResponseEntity<Void> profilePost() {
         ProfileResponse response = new ProfileResponse();
         // TODO implement or remove
@@ -53,7 +53,7 @@ public class ProfileController implements ProfileApi {
 
 
     @Override
-    @CrossOrigin
+    @CrossOrigin(origins = {"http://localhost:3000", "https://funance-msrv.azurewebsites.net"})
     public ResponseEntity<BudgetResponse> profileBudgetGet(@NotNull @RequestParam String username) {
         if (username == null || username.isEmpty()) {
             return new ResponseEntity(HttpStatus.BAD_REQUEST);
@@ -68,7 +68,21 @@ public class ProfileController implements ProfileApi {
     }
 
     @Override
-    @CrossOrigin
+    @CrossOrigin(origins = {"http://localhost:3000", "https://funance-msrv.azurewebsites.net"})
+    public ResponseEntity<Void> profileBudgetIncomePut(@Valid UpdateIncomeRequest body) {
+        if (body == null || body.getUsername() == null || body.getIncome() == null) {
+            return new ResponseEntity(HttpStatus.BAD_REQUEST);
+        }
+        try {
+            portfolioRepository.updateIncome(body.getUsername(), body.getIncome().floatValue());
+            return new ResponseEntity(HttpStatus.CREATED);
+        } catch (Exception exception) {
+            return new ResponseEntity(exception, HttpStatus.INTERNAL_SERVER_ERROR);
+        }
+    }
+
+    @Override
+    @CrossOrigin(origins = {"http://localhost:3000", "https://funance-msrv.azurewebsites.net"})
     public ResponseEntity<BudgetItem> profileBudgetItemGet(@NotNull @RequestParam Long itemId) {
         try {
             Budget budgetItem = portfolioRepository.findItemById(itemId);
@@ -79,7 +93,7 @@ public class ProfileController implements ProfileApi {
     }
 
     @Override
-    @CrossOrigin
+    @CrossOrigin(origins = {"http://localhost:3000", "https://funance-msrv.azurewebsites.net"})
     public ResponseEntity<BudgetItem> profileBudgetItemPost(@NotNull @RequestBody CreateBudgetItemRequest body) {
         long id = ProfileMapper.getRandomIntegerBetweenRange();
 
@@ -93,7 +107,7 @@ public class ProfileController implements ProfileApi {
     }
 
     @Override
-    @CrossOrigin
+    @CrossOrigin(origins = {"http://localhost:3000", "https://funance-msrv.azurewebsites.net"})
     public ResponseEntity<Void> profileBudgetPost(@Valid CaptureBudgetRequest body) {
         try {
             portfolioRepository.createFinancialProfile(body.getUsername(), body.getIncome().floatValue(), body.getSavings().floatValue(),
@@ -106,7 +120,7 @@ public class ProfileController implements ProfileApi {
     }
 
     @Override
-    @CrossOrigin
+    @CrossOrigin(origins = {"http://localhost:3000", "https://funance-msrv.azurewebsites.net"})
     public ResponseEntity<DashboardResponse> profileDashboardGet() {
         DashboardResponse response = new DashboardResponse();
         response.setBudget(ProfileMapper.mapBudgetSummary());
@@ -116,21 +130,21 @@ public class ProfileController implements ProfileApi {
     }
 
     @Override
-    @CrossOrigin
+    @CrossOrigin(origins = {"http://localhost:3000", "https://funance-msrv.azurewebsites.net"})
     public ResponseEntity<Void> profileBudgetItemCapturePost(@Valid CaptureBudgetItemRequest body) {
         // TODO implement or remove
         return new ResponseEntity(HttpStatus.OK);
     }
 
     @Override
-    @CrossOrigin
+    @CrossOrigin(origins = {"http://localhost:3000", "https://funance-msrv.azurewebsites.net"})
     public ResponseEntity<Void> profileBudgetItemCapturePut(@NotNull Long itemId, @NotNull String state) {
         portfolioRepository.updateBudgetItem(itemId, BudgetItem.StateEnum.PAYED.toString());
         return new ResponseEntity(HttpStatus.OK);
     }
 
     @Override
-    @CrossOrigin
+    @CrossOrigin(origins = {"http://localhost:3000", "https://funance-msrv.azurewebsites.net"})
     public ResponseEntity<SavingsResponse> profileSavingsGet() {
         SavingsResponse savingsResponse = new SavingsResponse();
         // TODO implement or remove
@@ -138,26 +152,28 @@ public class ProfileController implements ProfileApi {
     }
 
     @Override
-    @CrossOrigin
+    @CrossOrigin(origins = {"http://localhost:3000", "https://funance-msrv.azurewebsites.net"})
     public ResponseEntity<Void> profileSavingsGoalPost(String goalType) {
         // TODO implement or remove
         return new ResponseEntity(HttpStatus.OK);
     }
 
     @Override
+    @CrossOrigin(origins = {"http://localhost:3000", "https://funance-msrv.azurewebsites.net"})
     public ResponseEntity<Void> profileSavingsThresholdPost(@Valid SavingsThresholdRequest body) {
         // TODO implement or remove
         return new ResponseEntity(HttpStatus.OK);
     }
 
     @Override
-    @CrossOrigin
+    @CrossOrigin(origins = {"http://localhost:3000", "https://funance-msrv.azurewebsites.net"})
     public ResponseEntity<GameboardResponse> profileGameboardGet(@NotNull String username) {
         Gameboard gameboard = gameboardRepository.findGameboardFromUser(username);
         return new ResponseEntity(ProfileMapper.mapGameboard(gameboard), HttpStatus.OK);
     }
 
     @Override
+    @CrossOrigin(origins = {"http://localhost:3000", "https://funance-msrv.azurewebsites.net"})
     public ResponseEntity<GameboardResponse> profileGameboardItemPost(@Valid BuyGameItemRequest body) {
         GameboardResponse gameboardResponse = new GameboardResponse();
         return new ResponseEntity(gameboardResponse, HttpStatus.OK);

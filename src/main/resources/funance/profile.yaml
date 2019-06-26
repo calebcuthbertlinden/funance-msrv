@@ -113,6 +113,22 @@ paths:
           schema:
             $ref: "#/definitions/BudgetItem"
 
+  profile/budget/income:
+    put:
+      tags:
+      - budget
+      summary: Updates the users income
+      parameters:
+      - in: body
+        name: body
+        required: true
+        description: Update income amount
+        schema:
+          $ref: '#/definitions/UpdateIncomeRequest'
+      responses:
+        '204':
+          description: Updated income amount
+
   profile/budget/item/capture:
     post:
       tags:
@@ -347,6 +363,14 @@ definitions:
       investments:
         type: number
 
+  UpdateIncomeRequest:
+    type: object
+    properties:
+      username:
+        type: string
+      income:
+        type: number
+
   CreateBudgetItemRequest:
     type: object
     properties:
@@ -359,12 +383,7 @@ definitions:
       onceoff:
         type: boolean
       category:
-        type: string
-        enum:
-        - DEBIT_ORDER
-        - FOOD
-        - MISC
-        - CUSTOM
+        $ref: '#/definitions/Category'
       categoryCustom:
         type: string
       amount:
@@ -497,7 +516,7 @@ definitions:
   Category:
     type: string
     enum:
-    - DEBIT_ORDER
+    - RECURRING
     - FOOD
-    - MISC
+    - DAILY
     - CUSTOM

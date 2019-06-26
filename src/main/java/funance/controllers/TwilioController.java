@@ -18,8 +18,11 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RestController;
 import za.co.discovery.portal.model.BudgetItem;
 import za.co.discovery.portal.model.BudgetResponse;
+import za.co.discovery.portal.model.Category;
+import za.co.discovery.portal.model.CategoryList;
 
 import javax.servlet.http.HttpServletRequest;
+import java.util.List;
 
 @RestController
 public class TwilioController {
@@ -94,6 +97,54 @@ public class TwilioController {
             }
         } catch (Exception exception) {
             logger.error("Something went wrong");
+            sendTwilioMessage(userNumber,
+                    "Something went wrong fetching your budget");
+        }
+
+        return new ResponseEntity(HttpStatus.NO_CONTENT);
+    }
+
+    @CrossOrigin
+    @PostMapping("/profile/budget/outstanding/twilio")
+    public ResponseEntity<Void> outstandingItemsTwilioPost(HttpServletRequest request) {
+        String userNumber = getUserNumber(request.getParameterMap().get(TWILIO_HEADER_KEY)[0]);
+
+        // TODO Make reactive with observable pattern
+        sendTwilioMessage(userNumber, "Fetching your outstanding items. Give me one sec'");
+
+        String username = getUsernameFromNumber(userNumber);
+        try {
+            BudgetResponse budgetResponse = profileController.profileBudgetGet(username).getBody();
+            if (budgetResponse != null) {
+
+                String message = "";
+                boolean hasItem = false;
+                for (CategoryList list : budgetResponse.getCategories()) {
+                    if (list != null && list.getBudget() != null) {
+                        for (BudgetItem budget : list.getBudget()) {
+                            if (budget.getState() == BudgetItem.StateEnum.OPEN) {
+                                message = message.concat(budget.getTitle() + ": R" + budget.getAmount()).concat("\n");
+                                hasItem = true;
+                            }
+                        }
+                    }
+                }
+
+                if (hasItem) {
+                    sendTwilioMessage(userNumber,
+                            "Here's a summary of your outstanding items: \n" + message);
+                } else {
+                    sendTwilioMessage(userNumber,
+                            "Congrats! You have no outstanding payments");
+                }
+            } else {
+                sendTwilioMessage(userNumber,
+                        "Something went wrong fetching your budget");
+            }
+        } catch (Exception exception) {
+            logger.error("Something went wrong");
+            sendTwilioMessage(userNumber,
+                    "Something went wrong fetching your outstanding items");
         }
 
         return new ResponseEntity(HttpStatus.NO_CONTENT);

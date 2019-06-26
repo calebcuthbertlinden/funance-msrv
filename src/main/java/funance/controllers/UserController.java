@@ -30,7 +30,7 @@ public class UserController implements UserApi {
     }
 
     @Override
-    @CrossOrigin
+    @CrossOrigin(origins = {"http://localhost:3000", "https://funance-msrv.azurewebsites.net"})
     public ResponseEntity<AuthenticationResponse> userAuthenticatePost(@Valid AuthenticationRequest body) {
         if (body == null || body.getUsername() == null || body.getPassword() == null) {
             return new ResponseEntity(HttpStatus.BAD_REQUEST);
@@ -52,7 +52,26 @@ public class UserController implements UserApi {
     }
 
     @Override
-    @CrossOrigin
+    @CrossOrigin(origins = {"http://localhost:3000", "https://funance-msrv.azurewebsites.net"})
+    public ResponseEntity<Void> userContactPost(@NotNull String contact, @NotNull String username) {
+        if (contact.isEmpty()) {
+            return new ResponseEntity(HttpStatus.BAD_REQUEST);
+        }
+
+        if (contact.startsWith(" ")) {
+            contact = contact.replace(" ", "+");
+        }
+
+        try {
+            userRepository.updateContact(username, contact);
+            return new ResponseEntity(HttpStatus.CREATED);
+        } catch (Exception exception) {
+            return new ResponseEntity(HttpStatus.INTERNAL_SERVER_ERROR);
+        }
+    }
+
+    @Override
+    @CrossOrigin(origins = {"http://localhost:3000", "https://funance-msrv.azurewebsites.net"})
     public ResponseEntity<UserResponse> userGet(@NotNull @RequestParam String username) {
         if (username.isEmpty()) {
             return new ResponseEntity(HttpStatus.BAD_REQUEST);
@@ -66,7 +85,7 @@ public class UserController implements UserApi {
     }
 
     @Override
-    @CrossOrigin(origins = "http://localhost:3000")
+    @CrossOrigin(origins = {"http://localhost:3000", "https://funance-msrv.azurewebsites.net"})
     public ResponseEntity<UserResponse> userPost(@Valid CreateUserRequest body) {
         if (body == null || body.getUsername().isEmpty()) {
             return new ResponseEntity(HttpStatus.BAD_REQUEST);
@@ -80,7 +99,7 @@ public class UserController implements UserApi {
                 return new ResponseEntity(response, HttpStatus.OK);
             } else {
                 long id = ProfileMapper.getRandomIntegerBetweenRange();
-                userRepository.createUser((int) id, body.getUsername(), body.getName(), body.getSurname(), body.getEmail(), body.getPassword(), "+27647520016");
+                userRepository.createUser((int) id, body.getUsername(), body.getName(), body.getSurname(), body.getEmail(), body.getPassword(), "");
                 UserResponse userResponse = userGet(body.getUsername()).getBody();
                 return userResponse != null ?
                         new ResponseEntity<>(userResponse.status(UserResponse.StatusEnum.CREATED).coinAmount(100), HttpStatus.OK)

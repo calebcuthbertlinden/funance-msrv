@@ -42,4 +42,9 @@ public interface PortfolioRepository extends JpaRepository<Budget, Long> {
 
     @Query("SELECT fp FROM FinancialProfile fp WHERE fp.username like :username")
     FinancialProfile findFinancialProfileByUser(@Param("username") String username);
+
+    @Modifying
+    @Transactional
+    @Query("UPDATE FinancialProfile SET income = :income WHERE username like :username")
+    void updateIncome(@Param("username") String username, @Param("income") float income);
 }

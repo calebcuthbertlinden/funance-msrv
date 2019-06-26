@@ -22,28 +22,28 @@ public class ProfileMapper {
         List<CategoryList> list = new ArrayList();
 
         CategoryList debitOrder = new CategoryList();
-        debitOrder.setCategory(Category.DEBIT_ORDER);
+        debitOrder.setCategory(Category.RECURRING);
         CategoryList food = new CategoryList();
         food.setCategory(Category.FOOD);
         CategoryList misc = new CategoryList();
-        misc.setCategory(Category.MISC);
+        misc.setCategory(Category.DAILY);
         CategoryList custom = new CategoryList();
         custom.setCategory(Category.CUSTOM);
 
         int completeAmount = 0;
         for (Budget budget : budgetList) {
             completeAmount = budget.getState().equals("PAYED") ? completeAmount+1 : completeAmount;
-            switch (budget.getCategory()) {
-                case "DEBIT_ORDER":
+            switch (Category.fromValue(budget.getCategory())) {
+                case RECURRING:
                     debitOrder.addBudgetItem(mapBudgetItem(budget));
                     break;
-                case "FOOD":
+                case FOOD:
                     food.addBudgetItem(mapBudgetItem(budget));
                     break;
-                case "MISC":
+                case DAILY:
                     misc.addBudgetItem(mapBudgetItem(budget));
                     break;
-                case "CUSTOM":
+                case CUSTOM:
                     custom.addBudgetItem(mapBudgetItem(budget));
                     break;
             }
@@ -54,7 +54,7 @@ public class ProfileMapper {
         list.add(misc);
         list.add(custom);
 
-        float incomeLeft = profile.getIncome() - getAmountPayed(list);
+        float incomeLeft = profile != null ? profile.getIncome() - getAmountPayed(list) : 0;
 
         return new BudgetResponse()
                 .categories(list)
@@ -97,7 +97,7 @@ public class ProfileMapper {
     private static String getDaysRemainingThisMonth() {
 
         int number_Of_DaysInMonth = 31;
-        String MonthOfName = "Unknown";
+        String monthOfName = "Unknown";
 
         Date date = new Date();
         LocalDate localDate = date.toInstant().atZone(ZoneId.systemDefault()).toLocalDate();
@@ -107,11 +107,11 @@ public class ProfileMapper {
 
         switch (month) {
             case 1:
-                MonthOfName = "January";
+                monthOfName = "January";
                 number_Of_DaysInMonth = 31;
                 break;
             case 2:
-                MonthOfName = "February";
+                monthOfName = "February";
                 if ((year % 400 == 0) || ((year % 4 == 0) && (year % 100 != 0))) {
                     number_Of_DaysInMonth = 29;
                 } else {
@@ -119,52 +119,52 @@ public class ProfileMapper {
                 }
                 break;
             case 3:
-                MonthOfName = "March";
+                monthOfName = "March";
                 number_Of_DaysInMonth = 31;
                 break;
             case 4:
-                MonthOfName = "April";
+                monthOfName = "April";
                 number_Of_DaysInMonth = 30;
                 break;
             case 5:
-                MonthOfName = "May";
+                monthOfName = "May";
                 number_Of_DaysInMonth = 31;
                 break;
             case 6:
-                MonthOfName = "June";
+                monthOfName = "June";
                 number_Of_DaysInMonth = 30;
                 break;
             case 7:
-                MonthOfName = "July";
+                monthOfName = "July";
                 number_Of_DaysInMonth = 31;
                 break;
             case 8:
-                MonthOfName = "August";
+                monthOfName = "August";
                 number_Of_DaysInMonth = 31;
                 break;
             case 9:
-                MonthOfName = "September";
+                monthOfName = "September";
                 number_Of_DaysInMonth = 30;
                 break;
             case 10:
-                MonthOfName = "October";
+                monthOfName = "October";
                 number_Of_DaysInMonth = 31;
                 break;
             case 11:
-                MonthOfName = "November";
+                monthOfName = "November";
                 number_Of_DaysInMonth = 30;
                 break;
             case 12:
-                MonthOfName = "December";
+                monthOfName = "December";
                 number_Of_DaysInMonth = 31;
                 break;
             default:
-                MonthOfName = "unknown";
+                monthOfName = "unknown";
                 number_Of_DaysInMonth = 31;
                 break;
         }
 
-        return (number_Of_DaysInMonth - day) + " days left in " + MonthOfName;
+        return (number_Of_DaysInMonth - day) + " days left in " + monthOfName;
     }
 
     private static int getBudgetAmount(List<CategoryList> budgets) {
