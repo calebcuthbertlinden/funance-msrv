@@ -1,6 +1,6 @@
 package funance.mappers;
 
-import funance.data.User;
+import funance.data.tables.User;
 import org.springframework.stereotype.Component;
 import za.co.discovery.portal.model.UserResponse;
 
@@ -15,6 +15,7 @@ public class UserMapper {
         response.setEmail(user.getEmailId());
         response.setPassword(user.getPassword());
         response.setUsername(user.getUsername());
+        response.setContact(user.getContact());
         return response;
     }
 

@@ -1,5 +1,6 @@
-package funance.data;
+package funance.data.repositories;
 
+import funance.data.tables.User;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;
@@ -23,4 +24,9 @@ public interface UserRepository extends JpaRepository<User, Long> {
             nativeQuery = true)
     void createUser(@Param("identifier") int identifier, @Param("username") String username, @Param("firstname") String name, @Param("surname") String surname,
                     @Param("email") String email, @Param("password") String password, @Param("contact") String contact);
+
+    @Modifying
+    @Transactional
+    @Query("UPDATE User SET contact = :contact WHERE username like :username")
+    void updateContact(@Param("username") String username, @Param("contact") String contact);
 }

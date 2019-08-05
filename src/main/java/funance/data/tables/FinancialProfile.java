@@ -1,4 +1,4 @@
-package funance.data;
+package funance.data.tables;
 
 
 import javax.persistence.*;

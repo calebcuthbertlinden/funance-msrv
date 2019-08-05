@@ -4,8 +4,8 @@ import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import com.twilio.Twilio;
 import com.twilio.rest.api.v2010.account.Message;
-import funance.data.PortfolioRepository;
-import funance.data.UserRepository;
+import funance.data.repositories.PortfolioRepository;
+import funance.data.repositories.UserRepository;
 import funance.mappers.ProfileMapper;
 import funance.models.TwilioRequest;
 import org.slf4j.Logger;
@@ -18,8 +18,11 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RestController;
 import za.co.discovery.portal.model.BudgetItem;
 import za.co.discovery.portal.model.BudgetResponse;
+import za.co.discovery.portal.model.Category;
+import za.co.discovery.portal.model.CategoryList;
 
 import javax.servlet.http.HttpServletRequest;
+import java.util.List;
 
 @RestController
 public class TwilioController {
@@ -58,10 +61,12 @@ public class TwilioController {
         String title = item.getTwilio().getCollected_data().getCollect_comments().getAnswers().getTitle().getAnswer();
         String category = item.getTwilio().getCollected_data().getCollect_comments().getAnswers().getCategory().getAnswer();
         String amount = item.getTwilio().getCollected_data().getCollect_comments().getAnswers().getValue().getAnswer();
+        boolean payed = isPayed(item.getTwilio().getCollected_data().getCollect_comments().getAnswers().getPaid().getAnswer().toUpperCase());
 
         try {
             portfolioRepository.createBudgetItem(id, username, title, Float.valueOf(amount), category,
-                    getTodaysDate(), true, BudgetItem.StateEnum.OPEN.toString(), TWILIO_BUDGET_ITEM_DESCRIPTION);
+                    getTodaysDate(), payed, payed? BudgetItem.StateEnum.PAYED.toString() : BudgetItem.StateEnum.OPEN.toString(),
+                    TWILIO_BUDGET_ITEM_DESCRIPTION);
             sendTwilioMessage(userNumber,
                     "You have successfully added a new item to your budget: \n" + title  + " for R" + amount);
             return profileController.profileBudgetItemGet(id);
@@ -92,6 +97,54 @@ public class TwilioController {
             }
         } catch (Exception exception) {
             logger.error("Something went wrong");
+            sendTwilioMessage(userNumber,
+                    "Something went wrong fetching your budget");
+        }
+
+        return new ResponseEntity(HttpStatus.NO_CONTENT);
+    }
+
+    @CrossOrigin
+    @PostMapping("/profile/budget/outstanding/twilio")
+    public ResponseEntity<Void> outstandingItemsTwilioPost(HttpServletRequest request) {
+        String userNumber = getUserNumber(request.getParameterMap().get(TWILIO_HEADER_KEY)[0]);
+
+        // TODO Make reactive with observable pattern
+        sendTwilioMessage(userNumber, "Fetching your outstanding items. Give me one sec'");
+
+        String username = getUsernameFromNumber(userNumber);
+        try {
+            BudgetResponse budgetResponse = profileController.profileBudgetGet(username).getBody();
+            if (budgetResponse != null) {
+
+                String message = "";
+                boolean hasItem = false;
+                for (CategoryList list : budgetResponse.getCategories()) {
+                    if (list != null && list.getBudget() != null) {
+                        for (BudgetItem budget : list.getBudget()) {
+                            if (budget.getState() == BudgetItem.StateEnum.OPEN) {
+                                message = message.concat(budget.getTitle() + ": R" + budget.getAmount()).concat("\n");
+                                hasItem = true;
+                            }
+                        }
+                    }
+                }
+
+                if (hasItem) {
+                    sendTwilioMessage(userNumber,
+                            "Here's a summary of your outstanding items: \n" + message);
+                } else {
+                    sendTwilioMessage(userNumber,
+                            "Congrats! You have no outstanding payments");
+                }
+            } else {
+                sendTwilioMessage(userNumber,
+                        "Something went wrong fetching your budget");
+            }
+        } catch (Exception exception) {
+            logger.error("Something went wrong");
+            sendTwilioMessage(userNumber,
+                    "Something went wrong fetching your outstanding items");
         }
 
         return new ResponseEntity(HttpStatus.NO_CONTENT);
@@ -103,6 +156,10 @@ public class TwilioController {
 
     private String getUsernameFromNumber(String number) {
         return userRepository.findByContact(number).getUsername();
+    }
+
+    private boolean isPayed(String paid) {
+        return paid.charAt(0) == 'Y' || paid.equals("YES") || paid.equals("YIP") || paid.equals("YESS") || paid.equals("INDEED") || paid.equals("YA");
     }
 
     private String getTodaysDate() {

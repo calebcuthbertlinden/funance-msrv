@@ -48,6 +48,27 @@ paths:
           schema:
             $ref: "#/definitions/UserResponse"
 
+  user/contact:
+    post:
+      tags:
+      - user
+      summary: Update a users contact number
+      parameters:
+      - in: query
+        name: contact
+        required: true
+        description: whatsapp contact number
+        type: string
+      - in: query
+        name: username
+        required: true
+        description: username
+        type: string
+      responses:
+        '204':
+          description: Confirmation
+
+
   user/authenticate:
     post:
       tags:
@@ -88,6 +109,8 @@ definitions:
       email:
         type: string
       password:
+        type: string
+      contact:
         type: string
       coinAmount:
         type: integer
